@@ -106,19 +106,13 @@ function draw() {
             }
         }
 
-        let current = open_set[record];
+        current = open_set[record];
 
         if (current === end) {
-
-            // Find the path
-            let temp = current;
-            path.push(temp);
-
-            while (temp.parent) {
-                path.push(temp.parent);
-                temp = temp.parent;
-            }
+            noLoop();
             console.log("done!");
+            console.log(grid);
+            console.log(path);
         }
 
         // Move checked cells to the closed set
@@ -170,7 +164,16 @@ function draw() {
         closed_set[i].show(color(255, 0, 0));
     }
 
-    // Show path
+    // Find and show the path
+    path = [];
+    let temp = current;
+    path.push(temp);
+
+    while (temp.parent) {
+        path.push(temp.parent);
+        temp = temp.parent;
+    }
+
     for (let i = 0; i < path.length; i++) {
         path[i].show(color(0, 0, 255));
     }
