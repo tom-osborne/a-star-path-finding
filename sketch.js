@@ -48,7 +48,7 @@ class Cell {
         if (this.wall == true){
             fill(0);
         }
-        noStroke;
+        noStroke();
         rect(this.i * w, this.j * h, w, h);
     }
 
@@ -151,18 +151,23 @@ function draw() {
             if (!closed_set.includes(neighbour) && current.wall == false) {
                 let temp_g = current.g + 1;
 
+                let new_path = false;
                 if (open_set.includes(neighbour)) {
                     if(temp_g < neighbour.g) {
                         neighbour.g = temp_g;
+                        new_path = true;
                     }
                 } else {
                     neighbour.g = temp_g;
                     open_set.push(neighbour);
+                    new_path = true;
                 }
 
-                neighbour.h = heuristic(neighbour, end);
-                neighbour.f = neighbour.g + neighbour.h;
-                neighbour.parent = current;
+                if (new_path) {
+                    neighbour.h = heuristic(neighbour, end);
+                    neighbour.f = neighbour.g + neighbour.h;
+                    neighbour.parent = current;
+                }
             }
 
         }
@@ -180,12 +185,12 @@ function draw() {
 
     // Show open set
     for (let i = 0; i < open_set.length; i++) {
-        open_set[i].show(color(0, 255, 0));
+        open_set[i].show(color(0, 255, 0, 100));
     }
 
     // Show closed set
     for (let i = 0; i < closed_set.length; i++) {
-        closed_set[i].show(color(255, 0, 0));
+        closed_set[i].show(color(255, 0, 0, 100));
     }
 
     // Find and show the path
@@ -199,6 +204,6 @@ function draw() {
     }
 
     for (let i = 0; i < path.length; i++) {
-        path[i].show(color(0, 0, 255));
+        path[i].show(color(0, 100, 255));
     }
 }
