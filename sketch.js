@@ -206,4 +206,12 @@ function draw() {
     for (let i = 0; i < path.length; i++) {
         path[i].show(color(0, 100, 255));
     }
+    noFill();
+    stroke(255, 100, 255);
+    strokeWeight(2);
+    beginShape();
+    for (let i = 0; i < path.length; i++) {
+        vertex(path[i].i * w + w/2, path[i].j * h + h / 2);
+    }
+    endShape();
 }
