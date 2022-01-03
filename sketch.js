@@ -3,8 +3,8 @@ A* Path Finding Algorithm
 Tom Osborne
 02 January 2022
 */
-let cols = 20;
-let rows = 20;
+let cols = 50;
+let rows = 50;
 let grid = new Array(cols);
 
 let open_set = [];
@@ -23,8 +23,8 @@ function removeFromArr(arr, elt) {
 }
 
 function heuristic(a, b) {
-    // return dist(a.i, a.j, b.i, b.j); // Euclidean
-    return abs(a.i - b.i) + abs(a.j - b.j); // Manhattan
+    return dist(a.i, a.j, b.i, b.j); // Euclidean
+    // return abs(a.i - b.i) + abs(a.j - b.j); // Manhattan
 }
 
 class Cell {
@@ -36,10 +36,18 @@ class Cell {
         this.h = 0;    
         this.neighbours = [];
         this.parent = undefined;
+        this.wall = false;
+
+        if (random(1) < 0.3) {
+            this.wall = true;
+        }
     }
 
     show(colour) {
         fill(colour);
+        if (this.wall == true){
+            fill(0);
+        }
         noStroke;
         rect(this.i * w, this.j * h, w, h);
     }
@@ -47,17 +55,30 @@ class Cell {
     add_neighbours() {
         let i = this.i;
         let j = this.j;
-        if (i < cols - 1) {
+
+        if (i < cols - 1) {     // Right
             this.neighbours.push(grid[i + 1][j]);
         }
-        if (i > 0) {
+        if (i > 0) {            // Left
             this.neighbours.push(grid[i - 1][j]);
         }
-        if (j < rows - 1) {
+        if (j < rows - 1) {     // Bottom
             this.neighbours.push(grid[i][j + 1]);
         }
-        if (j > 0) {       
+        if (j > 0) {            // Top
             this.neighbours.push(grid[i][j - 1]);
+        }
+        if (i < cols -1 && j < rows - 1) { // Bottom-Right
+            this.neighbours.push(grid[i + 1][j + 1])
+        }
+        if (i > 0 && j < rows - 1) { // Bottom-Left
+            this.neighbours.push(grid[i - 1][j + 1])
+        }
+        if (i < cols -1 && j > 0) { // Top-Left
+            this.neighbours.push(grid[i + 1][j - 1])
+        }
+        if (i > 0 && j > 0) { // Bottom-Left
+            this.neighbours.push(grid[i - 1][j - 1])
         }
     }
 }
@@ -88,7 +109,10 @@ function setup(){
     }
 
     start = grid[0][0];
+    start.wall == false;
+
     end = grid[cols-1][rows - 1];
+    end.wall = false;
 
     open_set.push(start);
 
@@ -124,7 +148,7 @@ function draw() {
         for (let i = 0; i < neighbours.length; i++) {
             let neighbour = neighbours[i];
 
-            if (!closed_set.includes(neighbour)) {
+            if (!closed_set.includes(neighbour) && current.wall == false) {
                 let temp_g = current.g + 1;
 
                 if (open_set.includes(neighbour)) {
