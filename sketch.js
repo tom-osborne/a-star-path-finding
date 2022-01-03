@@ -135,8 +135,6 @@ function draw() {
         if (current === end) {
             noLoop();
             console.log("done!");
-            console.log(grid);
-            console.log(path);
         }
 
         // Move checked cells to the closed set
