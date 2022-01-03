@@ -109,7 +109,7 @@ function setup(){
     }
 
     start = grid[0][0];
-    start.wall == false;
+    start.wall = false;
 
     end = grid[cols-1][rows - 1];
     end.wall = false;
