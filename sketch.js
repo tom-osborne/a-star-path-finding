@@ -173,7 +173,6 @@ function draw() {
 
                 if (new_path) {
                     neighbour.h = heuristic(neighbour, end);
-                    // neighbour.g = heuristic(neighbour, start);
                     neighbour.f = neighbour.g + neighbour.h;
                     neighbour.parent = current;
                 }
