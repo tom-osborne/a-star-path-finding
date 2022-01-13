@@ -3,8 +3,8 @@ A* Path Finding Algorithm
 Tom Osborne
 02 January 2022
 */
-let cols = 50;
-let rows = 50;
+let cols = 100;
+let rows = 100;
 let grid = new Array(cols);
 
 let open_set = [];
@@ -90,7 +90,7 @@ class Cell {
 }
 
 function setup(){
-    createCanvas(600, 600);
+    createCanvas(700, 700);
 
     w = width / cols;
     h = height / rows;
