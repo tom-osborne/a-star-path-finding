@@ -35,10 +35,12 @@ class Cell {
         this.g = 0;
         this.h = 0;    
         this.neighbours = [];
+        this.diags = []
         this.parent = undefined;
         this.wall = false;
+        this.is_diag = false;
 
-        if (random(1) < 0.3) {
+        if (random(1) < 0.4) {
             this.wall = true;
         }
     }
@@ -69,16 +71,20 @@ class Cell {
             this.neighbours.push(grid[i][j - 1]);
         }
         if (i < cols -1 && j < rows - 1) { // Bottom-Right
-            this.neighbours.push(grid[i + 1][j + 1])
+            this.neighbours.push(grid[i + 1][j + 1]);
+            this.diags.push(grid[i + 1][j + 1]);
         }
         if (i > 0 && j < rows - 1) { // Bottom-Left
-            this.neighbours.push(grid[i - 1][j + 1])
+            this.neighbours.push(grid[i - 1][j + 1]);
+            this.diags.push(grid[i - 1][j + 1]);
         }
         if (i < cols -1 && j > 0) { // Top-Left
-            this.neighbours.push(grid[i + 1][j - 1])
+            this.neighbours.push(grid[i + 1][j - 1]);
+            this.diags.push(grid[i + 1][j - 1]);
         }
         if (i > 0 && j > 0) { // Bottom-Left
-            this.neighbours.push(grid[i - 1][j - 1])
+            this.neighbours.push(grid[i - 1][j - 1]);
+            this.diags.push(grid[i - 1][j - 1]);
         }
     }
 }
@@ -142,12 +148,16 @@ function draw() {
         closed_set.push(current);
 
         let neighbours = current.neighbours;
+        let diags = current.diags;
         
         for (let i = 0; i < neighbours.length; i++) {
             let neighbour = neighbours[i];
 
             if (!closed_set.includes(neighbour) && current.wall == false) {
                 let temp_g = current.g + 1;
+                if (diags.includes(neighbour) == true) {
+                    temp_g = current.g + Math.SQRT2; // Diagonal
+                }
 
                 let new_path = false;
                 if (open_set.includes(neighbour)) {
@@ -163,6 +173,7 @@ function draw() {
 
                 if (new_path) {
                     neighbour.h = heuristic(neighbour, end);
+                    // neighbour.g = heuristic(neighbour, start);
                     neighbour.f = neighbour.g + neighbour.h;
                     neighbour.parent = current;
                 }
@@ -205,8 +216,8 @@ function draw() {
         path[i].show(color(0, 100, 255));
     }
     noFill();
-    stroke(255, 100, 255);
-    strokeWeight(2);
+    stroke(40, 200, 255);
+    strokeWeight(4);
     beginShape();
     for (let i = 0; i < path.length; i++) {
         vertex(path[i].i * w + w/2, path[i].j * h + h / 2);
